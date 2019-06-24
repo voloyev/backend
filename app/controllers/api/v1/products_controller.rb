@@ -1,7 +1,7 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      before_action :set_product, only: %i[show update destroy]
+      before_action :set_product, only: %i[update destroy]
 
       PRODUCTS_PER_PAGE = 10
 
@@ -12,6 +12,7 @@ module Api
       end
 
       def show
+        @product = set_show_product
         render json: @product
       end
 
@@ -38,6 +39,10 @@ module Api
       end
 
       private
+
+      def set_show_product
+        Product.find_by_id(params[:id]) || {}
+      end
 
       def set_product
         @product = Product.find(params[:id])
