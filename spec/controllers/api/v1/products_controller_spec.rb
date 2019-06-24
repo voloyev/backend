@@ -11,5 +11,17 @@ RSpec.describe Api::V1::ProductsController do
       get :index
       expect(response.body).to eq(expected)
     end
+
+    describe '#show' do
+      it 'returns product with given id' do
+        11.times do |n|
+          Product.create(title: "Title#{n}", description: n, price: n)
+        end
+        expected = Product.find(1).to_json
+
+        get :show, params: { id: 1 }
+        expect(response.body).to eq(expected)
+      end
+    end
   end
 end
