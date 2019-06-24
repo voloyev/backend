@@ -7,8 +7,9 @@ RSpec.describe Api::V1::ProductsController do
         Product.create(title: "Title#{n}", description: n, price: n)
       end
       expected = Product.limit(10).to_json
+
       get :index
-      expect(response).to eq(expected)
+      expect(response.body).to eq(expected)
     end
   end
 end
