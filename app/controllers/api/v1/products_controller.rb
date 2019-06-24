@@ -1,51 +1,51 @@
-class Api::V1::ProductsController < ApplicationController
-  before_action :set_product, only: [:show, :update, :destroy]
+module Api
+  module V1
+    class ProductsController < ApplicationController
+      before_action :set_product, only: %i[show update destroy]
 
-  # GET /products
-  def index
-    @products = Product.all
+      PRODUCTS_PER_PAGE = 10
 
-    render json: @products
-  end
+      def index
+        @products = Product.limit(PRODUCTS_PER_PAGE).order(:id)
 
-  # GET /products/1
-  def show
-    render json: @product
-  end
+        render json: @products
+      end
 
-  # POST /products
-  def create
-    @product = Product.new(product_params)
+      def show
+        render json: @product
+      end
 
-    if @product.save
-      render json: @product, status: :created, location: @product
-    else
-      render json: @product.errors, status: :unprocessable_entity
+      def create
+        @product = Product.new(product_params)
+
+        if @product.save
+          render json: @product, status: :created, location: @product
+        else
+          render json: @product.errors, status: :unprocessable_entity
+        end
+      end
+
+      def update
+        if @product.update(product_params)
+          render json: @product
+        else
+          render json: @product.errors, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        @product.destroy
+      end
+
+      private
+
+      def set_product
+        @product = Product.find(params[:id])
+      end
+
+      def product_params
+        params.require(:product).permit(:title, :description, :price)
+      end
     end
   end
-
-  # PATCH/PUT /products/1
-  def update
-    if @product.update(product_params)
-      render json: @product
-    else
-      render json: @product.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /products/1
-  def destroy
-    @product.destroy
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def product_params
-      params.require(:product).permit(:title, :description, :price)
-    end
 end
