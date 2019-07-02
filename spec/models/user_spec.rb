@@ -23,5 +23,12 @@ RSpec.describe User, type: :model do
 
       expect(user.info(id)).to eq(user.last_name)
     end
+
+    it "generates info message when no data is defined" do
+      user = User.create()
+      id = user.id
+
+      expect(user.info(id)).to eq(nil)
+    end
   end
 end
