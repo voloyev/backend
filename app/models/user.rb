@@ -1,5 +1,6 @@
 class User < ApplicationRecord
 
+  has_one :cart
   attr_accessor :user
 
   def info(id)
